@@ -8,12 +8,16 @@ public:
     Token(char ch, double val):kind(ch), value(val){}
 };
 Token get_token();
+double expression();
+double term();
+double primary();
+
 vector<Token> tok;
 int main()
 {
-    string userInput;
-    double res;
     // read a line
+    // 词法分析
+    /*
     cout << "Expression: ";
     while(cin){
         Token temp = get_token();
@@ -22,12 +26,39 @@ int main()
     for(auto x:tok){
         cout << "kind:" << x.kind << " value:"<< x.value << endl;
     }
-
+    */
     //calculate
-
-
-    // write_result 
-    cout << "Result: " << res;
+    // 语法分析
+    /*
+    Expression:
+          Term
+          Expression "+" Term         // addition
+          Expression "–" Term         // subtraction
+    Term:
+          Primary
+          Term "*" Primary             // multiplication
+          Term "/" Primary              // division
+          Term "%" Primary               // remainder (modulo)
+    Primary:
+          Number
+           "(" Expression ")"             // grouping
+    Number:
+          floating-point-literal
+    */
+   
+   try{
+        while(cin)
+            cout << "=" << expression() << endl;
+        keep_window_open();
+   }catch(exception& e){
+       cerr << e.what() << endl;
+       keep_window_open();
+       return 1;
+   }catch(...){
+       cerr << "exception" << endl;
+       keep_window_open();
+       return 2;
+   }
 }
 
 Token get_token()
@@ -59,5 +90,72 @@ Token get_token()
         Token temp('n', stof(word));
         return temp;
     }
+}
 
+double expression()
+{
+    double left = term();
+    Token t = get_token();
+    while(true){
+        switch(t.kind){
+            case '+':
+                left += term();
+                t = get_token();
+                break;
+            case '-':
+                left -= term();
+                t = get_token();
+                break;
+            default:
+                return left;
+        }
+    }
+}
+
+double term()
+{
+    double left = primary();
+    Token t = get_token();
+    while(true){
+        switch(t.kind){
+            case '*':
+                left *= primary();
+                t = get_token();
+                break;
+            case '/':
+            {
+                double d = primary();
+                if(d == 0) error("dividi by zero");
+                left /= primary();
+                t = get_token();
+                break;
+            }
+            /*
+            case '%':
+                left %= primary();
+                t = get_token();
+                break;
+            */
+            default:
+                return left;
+        }
+    }
+}
+
+double primary()
+{
+    Token t = get_token();
+    switch(t.kind){
+        case '(':
+        {
+            double d = expression();
+            t = get_token();
+            if(t.kind != ')') error("')' expected");
+            return d;
+        }
+        case 'n':
+            return t.value;
+        default:
+            error("primary expected");
+    }
 }
