@@ -74,13 +74,13 @@ Token Token_stream::get()
     cin >> ch;    // note that >> skips whitespace (space, newline, tab, etc.)
 
     switch (ch) {
-    case ';':    // for "print"
-    case 'q':    // for "quit"
+    case '=':    // for "print"
+    case 'x':    // for "quit"
     case '(': case ')': case '+': case '-': case '*': case '/': 
         return Token(ch);        // let each character represent itself
     case '.':
     case '0': case '1': case '2': case '3': case '4':
-    case '5': case '6': case '7': case '9':
+    case '5': case '6': case '7': case '8': case '9':
         {    
             cin.putback(ch);         // put digit back into the input stream
             double val;
@@ -88,6 +88,7 @@ Token Token_stream::get()
             return Token('8',val);   // let '8' represent "a number"
         }
     default:
+        cout << ch << endl;
         error("Bad token");
     }
 }
@@ -134,6 +135,7 @@ double term()
         case '*':
             left *= primary();
             t = ts.get();
+            break;
         case '/':
             {    
                 double d = primary();
@@ -160,11 +162,13 @@ double expression()
     while(true) {    
         switch(t.kind) {
         case '+':
+            cout << "counting:" << left << " + term()" << endl;
             left += term();    // evaluate Term and add
             t = ts.get();
             break;
         case '-':
-            left += term();    // evaluate Term and subtract
+            cout << "counting:" << left << " + term()" << endl;
+            left -= term();    // evaluate Term and subtract
             t = ts.get();
             break;
         default: 
@@ -179,11 +183,15 @@ double expression()
 int main()
 try
 {
+    string greeting("Welcome to our simple calculator.\nPlease enter expressions using floating-point numbers.\n");
+    string tips("'1+1=' to count, 'x' to quit.\n");
+    cout << greeting << tips; 
     while (cin) {
+        double val;
         Token t = ts.get();
         
-        if (t.kind == 'q') break; // 'q' for quit
-        if (t.kind == ';')        // ';' for "print now"
+        if (t.kind == 'x') break; // 'q' for quit
+        if (t.kind == '=')        // ';' for "print now"
             cout << "=" << val << '\n';
         else
             ts.putback(t);

@@ -28,7 +28,7 @@ int main()
     }
     */
     //calculate
-    // 语法分析
+    // 语法分析:按优先级分块
     /*
     Expression:
           Term
