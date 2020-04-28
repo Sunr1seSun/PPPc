@@ -1,4 +1,5 @@
 #include "std_lib_facilities.h"
+//-----------------------------------------------
 class Token{
 public:
     // '()','+','-','*','/','n' 
@@ -30,5 +31,127 @@ Token Token_stream::get()
         full = false;
         return buffer;
     }
-    
+    string word;
+    Token cur;
+    cin >> word;
+    if(cin.eof()){
+        Token temp('z');
+        return temp;
+    }
+    if(word.length() == 1){
+        switch(word[0]){
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '(':
+            case ')':
+            {
+                Token temp(word[0]);
+                return temp;
+            }
+            default:
+            {
+                Token temp('n', stof(word));
+                return temp;
+            }
+        }
+    }else{
+        Token temp('n', stof(word));
+        return temp;
+    }
+}
+//--------------------------------------------------
+Token_stream ts;
+double expression();
+double term();
+double primary();
+//--------------------------------------------------
+double expression()
+{
+    double left = term();
+    Token t = ts.get();
+    while(true){
+        switch(t.kind){
+            case '+':
+                cout << "counting:" << left << " + term()" << endl;
+                left += term();
+                t = ts.get();
+                break;
+            case '-':
+                cout << "counting:" << left << " - term()" << endl;
+                left -= term();
+                t = ts.get();
+                break;
+            default:
+                ts.putback(t);
+                return left;
+        }
+    }
+}
+double term()
+{
+    double left = primary();
+    Token t = ts.get();
+    while(true){
+        switch(t.kind){
+            case '*':
+                cout << "counting:" << left << " * primary()" << endl;
+                left *= primary();
+                t = ts.get();
+                break;
+            case '/':
+            {
+                double d = primary();
+                if(d == 0)
+                    error("divide by zero");
+                cout << "counting:" << left << " / primary()" << endl;
+                left /= d;
+                t = ts.get();
+                break;
+            }
+            default:
+                ts.putback(t);
+                return left;
+        }
+    }
+}
+
+double primary()
+{
+    Token t = ts.get();
+    switch(t.kind){
+        case '(':
+        {
+            double d = expression();
+            t = ts.get();
+            if(t.kind != ')') error("')' expected");
+            cout << "number in () is " << d << endl;
+            return d;
+        }
+        case 'n':
+            cout << "primary() = " << t.value << endl;
+            return t.value;
+        default:
+            error("primary expected");
+    }
+}
+
+int main()
+{
+    try{
+        double val = 0;
+        while(cin){
+            val = expression();
+            cout << "=" << val << endl;
+        }
+   }catch(exception& e){
+       cerr << e.what() << endl;
+       keep_window_open();
+       return 1;
+   }catch(...){
+       cerr << "exception" << endl;
+       keep_window_open();
+       return 2;
+   }
 }
