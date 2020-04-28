@@ -1,4 +1,5 @@
 #include "std_lib_facilities.h"
+//在该版本下因为token是string读入，不同字符间必须用空格分割。
 //-----------------------------------------------
 class Token{
 public:
