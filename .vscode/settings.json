@@ -50,6 +50,9 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "thread": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "forward_list": "cpp",
+        "random": "cpp",
+        "iostream": "cpp"
     }
 }
