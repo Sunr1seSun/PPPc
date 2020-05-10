@@ -1,3 +1,6 @@
+socket实例
+
+参考：
 youtube Creating a TCP Server in C++
 
 https://www.youtube.com/watch?v=WDn-htpBlnU
