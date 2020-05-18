@@ -10,5 +10,4 @@ int main()
         cerr << "runtime error:" << e.what() << endl;
     }
     error("default");
-    
 }
