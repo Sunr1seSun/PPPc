@@ -64,7 +64,7 @@ DoubleLink<T>::~DoubleLink()
 template<class T>
 DNode<T>* DoubleLink<T>::getNode(int index)
 {
-    if(index < 0 || index > count){
+    if(index < 0 || index >= count){
         cout << "Wrong index!" << endl;
         return nullptr;
     }
@@ -103,6 +103,13 @@ T DoubleLink<T>::getLast()
 template<class T>
 int DoubleLink<T>::insert(int index, T t)
 {
+    if(count == 0){
+        DNode<T> *cur = new DNode<T>(t, phead, ptail);
+        phead->next = cur;
+        ptail->prev = cur;
+        ++count;
+        return 0;
+    }
     DNode<T> *p = getNode(index);
     DNode<T> *cur = new DNode<T>(t, p->prev, p);
     p->prev->next = cur;
@@ -139,6 +146,6 @@ int main()
     l1.show();
     //cout<<l1.get(1) << endl;
 
-    l1.del(1);
+    l1.del(2);
     l1.show();
 }
