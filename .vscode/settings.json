@@ -5,6 +5,12 @@
         "memory": "cpp",
         "type_traits": "cpp",
         "iostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "map": "cpp",
+        "regex": "cpp",
+        "unordered_map": "cpp",
+        "xlocmon": "cpp",
+        "xmemory": "cpp",
+        "xtree": "cpp"
     }
 }
