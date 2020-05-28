@@ -11,6 +11,17 @@
         "unordered_map": "cpp",
         "xlocmon": "cpp",
         "xmemory": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "stack": "cpp",
+        "utility": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "queue": "cpp",
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "random": "cpp",
+        "xhash": "cpp",
+        "xutility": "cpp"
     }
 }
