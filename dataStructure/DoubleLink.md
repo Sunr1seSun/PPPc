@@ -1,4 +1,4 @@
-![1590642857384](C:\Users\lkjml\AppData\Roaming\Typora\typora-user-images\1590642857384.png)
+![1590642857384](.\photo\1590642857384.png)
 
 Node:
 
