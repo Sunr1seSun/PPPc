@@ -22,6 +22,14 @@
         "initializer_list": "cpp",
         "random": "cpp",
         "xhash": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "set": "cpp",
+        "xstddef": "cpp",
+        "algorithm": "cpp",
+        "forward_list": "cpp",
+        "iomanip": "cpp",
+        "istream": "cpp",
+        "iterator": "cpp",
+        "xlocnum": "cpp"
     }
 }
