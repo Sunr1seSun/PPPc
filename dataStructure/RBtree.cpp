@@ -4,7 +4,7 @@ using namespace std;
 
 enum RBTreeColor {RED, BLACK};
 
-//todo:红黑树中的空节点是个节点，而不是nullptr
+//todo:remove
 template <class T>
 class RBTreeNode{
 public:
@@ -31,6 +31,14 @@ public:
     void preOrder();
     void inOrder();
 
+    RBTreeNode<T>* search(T value);
+
+    void remove(T value);
+
+    //前驱后继
+    RBTreeNode<T>* predecessor(RBTreeNode<T>* node);
+    RBTreeNode<T>* successor(RBTreeNode<T>* node);
+
 private:
     void destroy(RBTreeNode<T>* &tree);
 
@@ -41,7 +49,112 @@ private:
 
     void preOrder(RBTreeNode<T>* tree) const;
     void inOrder(RBTreeNode<T>* tree) const;
+
+    RBTreeNode<T>* search(RBTreeNode<T>* tree, T value);
+
+    RBTreeNode<T>* remove(RBTreeNode<T>* &tree, RBTreeNode<T>* n);
 };
+
+//前驱后继
+template<class T>
+RBTreeNode<T>* RBTree<T>::predecessor(RBTreeNode<T>* node)
+{
+    if(node->left != nullptr){
+        RBTreeNode<T>* p = node->left;
+        while(p->right != nullptr)
+            p = p->right;
+        return p;
+    }else{
+        RBTreeNode<T>* p = node->parent;
+        if(node == p->right)
+            return p;
+        else{
+            while(p == p->parent->left)
+                p = p->parent;
+            p = p->parent;
+            return p;
+        }
+    }
+}
+
+template<class T>
+RBTreeNode<T>* RBTree<T>::successor(RBTreeNode<T>* node)
+{
+    if(node->right != nullptr){
+        RBTreeNode<T>* p = node->right;
+        while(p->left != nullptr)
+            p = p->left;
+        return p;
+    }else{
+        RBTreeNode<T>* p = node->parent;
+        if(node == p->left)
+            return p;
+        else{
+            while(p == p->parent->right)
+                p = p->parent;
+            p = p->parent;
+            return p;
+        }
+    }
+}
+
+//删除
+template<class T>
+void RBTree<T>::remove(T value)
+{
+    auto node = search(value);
+    remove(mRoot, node);
+}
+template<class T>
+RBTreeNode<T>* RBTree<T>::remove(RBTreeNode<T>* &tree, RBTreeNode<T>* n)
+{
+    RBTreeNode<T> *cur,*x;
+    if(n->left == nullptr || n->right == nullptr)
+        cur = (n->right == nullptr)?n->left:n->right;
+    else{
+        cur = successor(n);
+    }
+    if(cur->left != nullptr){
+        x = cur->left;
+    }else{
+        x = cur->right;
+    }
+    x->parent = cur->parent;
+    if(cur->parent == nullptr)
+        mRoot = x;
+    else if(cur == cur->parent->left)
+        cur->parent->left = x;
+    else
+        cur->parent->right = x;
+    if(cur != n)
+        n->key = cur->key;
+    if(cur->color == BLACK)
+        removeFixup(tree, x);
+    return cur;
+}
+
+//查找
+template<class T>
+RBTreeNode<T>* RBTree<T>::search(T value)
+{
+    auto node = search(mRoot, value);
+    if(node == nullptr){
+        cout << "can't find "<< value << "." <<endl;
+    }
+    return node;
+}
+template<class T>
+RBTreeNode<T>* RBTree<T>::search(RBTreeNode<T>* tree, T value)
+{
+    if(tree == nullptr) return nullptr;
+    if(value < tree->key){
+        return search(tree->left, value);
+    }else if(value > tree->key){
+        return search(tree->right, value);
+    }else{
+        return tree;
+    }
+}
 
 
 //遍历
@@ -232,6 +345,7 @@ int main()
     }
     t.preOrder();
     t.inOrder();
+    cout << t.successor(t.search(70))->key << endl;
 
     return 0;
 }
