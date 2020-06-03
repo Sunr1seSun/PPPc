@@ -145,6 +145,13 @@ void RBTree<T>::removeFixUp(RBTreeNode<T>* &tree, RBTreeNode<T>* n)
         if(n == n->parent->left){
             bro = n->parent->right;
             //兄弟红色
+            /*
+                parent              bro黑
+                /  \      ->        /
+               n黑  bro红         parent红
+                                  /  \
+                                n黑  肯定是黑
+            */
             if(bro->color == RED){
                 bro->color = BLACK;
                 n->parent->color = RED;
@@ -152,11 +159,21 @@ void RBTree<T>::removeFixUp(RBTreeNode<T>* &tree, RBTreeNode<T>* n)
                 bro = n->parent->right;
             }
             //兄弟黑色，兄弟孩子都是黑色
+            //兄弟变红，黑黑向上移动到n->parent。
             if((bro->left == nullptr || bro->left->color == BLACK) && 
             (bro->right == nullptr || bro->right->color == BLACK)){
                 bro->color = RED;
                 n = n->parent;
             }else{
+                /*
+                    parent              parent
+                    / \                  / \
+                   n  bro     ->        n  黑
+                      / \                    \
+                     红  黑                  bro红
+                                               \
+                                                黑
+                */
                 if(bro->right == nullptr || bro->right->color == BLACK){
                     bro->left->color = BLACK;
                     bro->color = RED;
@@ -164,6 +181,13 @@ void RBTree<T>::removeFixUp(RBTreeNode<T>* &tree, RBTreeNode<T>* n)
                     bro = n->parent->right;
                 }
                 //兄弟黑色，兄弟右孩子是红色
+                /*
+                   parent                bro
+                    / \                  / \
+                n黑黑  bro黑  ->   parent黑  黑
+                        \             /      
+                         红          n黑 
+                */
                 bro->color = n->parent->color;
                 n->parent->color = BLACK;
                 bro->right->color = BLACK;
