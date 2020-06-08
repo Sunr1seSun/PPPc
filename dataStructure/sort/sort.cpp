@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 
 using namespace std;
 
@@ -235,11 +236,28 @@ vector<int> mergeSort(vector<int> nums)
     return nums;
 }
 
+vector<int> bucketSort(vector<int> nums)
+{
+    if(nums.empty()) return {};
+    int low = *min_element(nums.begin(), nums.end());
+    int high = *max_element(nums.begin(), nums.end());
+    int n = high - low + 1;
+    vector<int> buckets(n);
+    for(int num: nums) ++buckets[num-low];
+    vector<int> res;
+    for(int i = 0; i < n; ++i){
+        for(int j = 0; j < buckets[i]; ++j){
+            res.push_back(i+low);
+        }
+    }
+    return res;
+}
+
 int main()
 {
     double start,end;
-    //vector<int> nums = getRandomVector(20000);
-    vector<int> nums = {5,2,3,1};
+    vector<int> nums = getRandomVector(20000);
+    //vector<int> nums = {5,2,3,1};
     //for(auto i:nums) cout << i << " ";
 
     // bubbleSort1
@@ -296,6 +314,12 @@ int main()
     end = clock();
     if(mergeSortNums == bubbleNums)
         cout << "mergeSort:"<< LAST_TIME(start, end) << "ms" << endl;
+
+    start = clock();
+    vector<int> bucketSortNums = bucketSort(nums);
+    end = clock();
+    if(bucketSortNums == bubbleNums)
+        cout << "bucketSort:"<< LAST_TIME(start, end) << "ms" << endl;
 
     //for(auto i:mergeSort(nums)) cout << i << " ";
     
