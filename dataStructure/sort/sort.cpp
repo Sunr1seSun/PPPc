@@ -183,7 +183,7 @@ void heapify(vector<int> &nums, int i, int n)
 void buildHeap(vector<int> &nums)
 {
     int n = nums.size();
-    int last = (n-1) / 2;
+    int last = (n-2) / 2;
     for(int i = last; i >=0; --i){
         heapify(nums, i, n);
     }
@@ -193,7 +193,7 @@ vector<int> heapSort(vector<int> nums)
     buildHeap(nums);
     for(int i = nums.size()-1; i > 0; --i){
         swap(nums[0], nums[i]);
-        heapify(nums,0,i-1);
+        heapify(nums,0,i);
     }
     return nums;
 }
@@ -238,7 +238,8 @@ vector<int> mergeSort(vector<int> nums)
 int main()
 {
     double start,end;
-    vector<int> nums = getRandomVector(20000);
+    //vector<int> nums = getRandomVector(20000);
+    vector<int> nums = {5,2,3,1};
     //for(auto i:nums) cout << i << " ";
 
     // bubbleSort1
