@@ -44,6 +44,27 @@
         "xlocbuf": "cpp",
         "xlocinfo": "cpp",
         "xlocmes": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "cctype": "cpp",
+        "chrono": "cpp",
+        "cmath": "cpp",
+        "concepts": "cpp",
+        "cstddef": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "cwchar": "cpp",
+        "ios": "cpp",
+        "iosfwd": "cpp",
+        "limits": "cpp",
+        "mutex": "cpp",
+        "new": "cpp",
+        "ratio": "cpp",
+        "streambuf": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "xfacet": "cpp",
+        "xtr1common": "cpp"
     }
 }
