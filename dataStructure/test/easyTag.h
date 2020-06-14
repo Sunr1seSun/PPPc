@@ -43,6 +43,7 @@ lb_type easyTag::combine(lb_type lb1, lb_type lb2){
         nodes.push_back(tmp);
         return nodes.size();
     }else{
+        delete tmp;
         return iter->second;
     }
 }

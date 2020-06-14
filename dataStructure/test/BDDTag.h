@@ -1,11 +1,18 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 
-#define VEC_CAP (1 << 16)
-#define ROOT 0
 #define BDD_LB_WIDTH 24
+#define BDD_LEN_LB 0xF0000000
+#define BDD_LB_MASK 0x0FFFFFFF
+#define BDD_HAS_LEN_LB(lb) (lb >= BDD_LEN_LB)
+#define BDD_CLEAR_LEN_MASK(lb) (lb = lb & BDD_LB_MASK)
+#define VEC_CAP (1 << 16)
 #define LB_WIDTH BDD_LB_WIDTH
 #define MAX_LB ((1 << LB_WIDTH) - 1)
+#define LB_MASK MAX_LB
+#define LEN_LB BDD_LEN_LB
+#define ROOT 0
 typedef uint32_t lb_type;
 typedef uint32_t tag_off;
 
@@ -37,6 +44,7 @@ public:
     BDDTag();
     ~BDDTag();
     lb_type insert(tag_off pos);
+    lb_type combine(lb_type lb1, lb_type lb2);
     
 private:
     lb_type insert_n_zeros(lb_type cur_lb, size_t num, lb_type last_one_lb);
@@ -120,6 +128,80 @@ lb_type BDDTag::insert_n_ones(lb_type cur_lb, size_t num, lb_type last_one_lb){
                 num -= next_size;
             }
         }
+    }
+    return cur_lb;
+}
+
+
+// 合并
+lb_type BDDTag::combine(lb_type l1, lb_type l2){
+    if(l1 == 0)
+        return l2;
+    if(l2 == 0 || l1 == l2)
+        return l1;
+    
+    bool has_len_lb = BDD_HAS_LEN_LB(l1) || BDD_HAS_LEN_LB(l2);
+    l1 = l1 & LB_MASK;
+    l2 = l2 & LB_MASK;
+
+    if(l1 > l2) {
+        lb_type tmp = l2;
+        l2 = l1;
+        l1 = tmp;
+    }
+
+    std::stack<lb_type> lb_st;
+    lb_type last_begin = MAX_LB;
+
+    while(l1 > 0 && l1 != l2){
+        tag_off b1 = nodes[l1].seg.begin;
+        tag_off b2 = nodes[l2].seg.begin;
+        if(b1 < b2){
+            if(b2 < last_begin){
+                lb_st.push(l2);
+                last_begin = b2;
+            }
+            l2 = nodes[l2].parent;
+        }else{
+            if(b1 < last_begin){
+                lb_st.push(l1);
+                last_begin = b1;
+            }
+            l1 = nodes[l1].parent;
+        }
+    }
+    lb_type cur_lb;
+    if(l1 > 0){
+        cur_lb = l1;
+    }else{
+        cur_lb = l2;
+    }
+
+    while (!lb_st.empty()){
+        tag_seg cur_seg = nodes[cur_lb].seg;
+        lb_type next = lb_st.top();
+        lb_st.pop();
+        tag_seg next_seg = nodes[next].seg;
+
+        if(cur_seg.end >= next_seg.begin){
+            if(next_seg.end > cur_seg.end){
+                size_t size = next_seg.end - cur_seg.end;
+                cur_lb = insert_n_ones(cur_lb, size, cur_lb);
+            }
+        }else{
+            lb_type last_lb = cur_lb;
+            size_t gap = next_seg.begin - cur_seg.end;
+            cur_lb = insert_n_zeros(cur_lb, gap, last_lb);
+            size_t size = next_seg.end - next_seg.begin;
+            cur_lb = insert_n_ones(cur_lb, size, last_lb);
+        }
+
+        if(next_seg.sign){
+            nodes[cur_lb].seg.sign = true;
+        }
+    }
+    if(has_len_lb){
+        cur_lb |= LEN_LB;
     }
     return cur_lb;
 }
