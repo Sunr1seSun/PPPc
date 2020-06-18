@@ -80,6 +80,6 @@ int main()
     cout << y.data << " " << y.size() << endl;
     cout << x.data << " " << x.size() << endl;
     cout << z.data << " " << z.size() << endl;
-    string a = 'a' + 1;
+    int a = 'a' + 1;
     cout << typeid(a).name() << " " << a << endl;
 }
