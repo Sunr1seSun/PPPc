@@ -31,6 +31,7 @@ int main()
 {
     srand(time(0));
     double start,end;
+    /*
     BDDTag t;
     start = clock();
     for(int i =0; i < 1000; ++i) t.insert(i);
@@ -39,15 +40,23 @@ int main()
     for(int i =0; i < 4000; ++i) t.combine(int(rand()%t.nodes.size()),int(rand()%t.nodes.size()));
     end = clock();
     std::cout << "BDD:"<< LAST_TIME(start, end) << "ms" << std::endl;
-
+    */
     easyTag t2;
     start = clock();
-    for(tag_off i =0; i < 1000; ++i) t2.insert(i);
+    for(tag_off i =0; i < 20; ++i) t2.insert(i);
 
-    for(int i =0; i < 4000; ++i) t2.combine(int(rand()%t2.nodes.size()),int(rand()%t2.nodes.size()));
+    for(int i =0; i < 20; ++i) t2.combine(int(rand()%t2.nodes.size()),int(rand()%t2.nodes.size()));
     end = clock();
     std::cout << "easy:"<< LAST_TIME(start, end) << "ms" << std::endl;
+
     //printBDDTag(t);
     printEasyTag(t2);
+
+    std::vector<tag_off> vec = t2.find(33);
+    for(auto x: vec){
+        std::cout << x << std::endl;
+    }
     
+    std::cout << t2.to_string(30);
+
 }

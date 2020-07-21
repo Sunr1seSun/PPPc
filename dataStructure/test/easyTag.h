@@ -1,23 +1,27 @@
-
 #include <iostream>
 #include <vector>
 #include <set>
 #include <map>
+#include <string>
 
 typedef uint32_t lb_type;
 typedef uint32_t tag_off;
 
 class easyTag{
 private:
-    
 public:
     std::map<std::set<tag_off>, lb_type> forward;
-    std::vector<std::set<tag_off>*> nodes;
+    std::vector<std::set<tag_off>*> nodes; 
+public:
     easyTag();
     ~easyTag();
     lb_type insert(tag_off pos);
 
     lb_type combine(lb_type lb1, lb_type lb2);
+
+    const std::vector<tag_off> find(lb_type lb);
+
+    std::string to_string(lb_type lb);
 };
 easyTag::easyTag(){}
 easyTag::~easyTag(){}
@@ -46,4 +50,17 @@ lb_type easyTag::combine(lb_type lb1, lb_type lb2){
         delete tmp;
         return iter->second;
     }
+}
+
+const std::vector<tag_off> easyTag::find(lb_type lb){
+    return std::vector<tag_off>((*(nodes[lb])).begin(),(*(nodes[lb])).end());
+}
+
+std::string easyTag::to_string(lb_type lb) {
+    std::string tmp = "{";
+    for(auto x: *nodes[lb]){
+        tmp += std::to_string(x) + ",";
+    }
+    *(tmp.end()-1) = '}';
+    return tmp;
 }
