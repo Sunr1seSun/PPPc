@@ -1,21 +1,22 @@
 #include <iostream>
-#include <cmath>
-
+#include <vector>
 using namespace std;
-bool isPrime(int n){
-    for(int i = 2; i <= sqrt(n); ++i){
-        if(n % i == 0)
-            return false;
+int func(int n){
+    if(n <3) return n;
+    vector<int> dp(n+1);        
+    dp[0] = 0;
+    dp[1] = 1;
+    dp[2] = 2;
+    for(int i = 2; i <= n; ++i){
+        dp[i] = dp[i-1] + dp[i-2];
     }
-    return true;
+    for(auto x: dp)
+        cout << x << endl;
+    return dp[n];
 }
 
-int main()
-{
-    for(int i = 0; i < 32; ++i){
-        if(isPrime(i))
-            cout << i << endl;
-    }
+int main() {
+    
+    cout << func(10);
 
-    return 0;
 }
