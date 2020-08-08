@@ -12,7 +12,7 @@ void backTrack(vector<int> &cur, int n, int level){
             res += to_string(c) + " ";
         }
         res.pop_back();
-        //cout << res << endl;
+        cout << res << endl;
         return;
     }
     for(int i = 1; i <= n; ++i){
@@ -35,7 +35,7 @@ void func(int n){
 int main()
 {
     int start = clock();
-    func(10);
+    func(5);
     int end = clock();
     cout << "test:"<< (end-start) / CLOCKS_PER_SEC * 1000 << "ms" << endl;
 }
